@@ -4,32 +4,7 @@ export default {
   data(){
     return {
       activeTab: 'about',
-      timelineItems: [
-        {
-          title: 'Availability:',
-          text: 'Full-time',
-          color: 'red lighten-2',
-          icon: 'mdi-calendar-check-outline'
-        },
-        {
-          title: 'Development Experience:',
-          text: 'One year',
-          color: 'green lighten-1',
-          icon: 'mdi-briefcase-outline'
-        },
-        {
-          title: 'Education:',
-          text: 'Northwestern University',
-          color: 'purple darken-1',
-          icon: 'mdi-school-outline'
-        },
-        {
-          title: 'Country:',
-          text: 'United States',
-          color: 'indigo',
-          icon: 'mdi-crosshairs-gps'
-        },
-      ],
+      timelineItems: [],
       socials: [
         {
           icon: 'mdi-github',
@@ -44,6 +19,10 @@ export default {
       ]
     }
   },
+  async fetch(){
+    const timeline = await this.$axios.get('https://api.cosmicjs.com/v2/buckets/nuxt-portfolio-production/objects?pretty=true&query=%7B%22type%22%3A%22time-lines%22%7D&read_key=LPx3LELVgjXcFbGKD3xjBQGNVd87FsFbK9bbCeO9MJ8lFGNcLN&limit=20&props=slug,title,content,metadata')
+    this.timelineItems = timeline.data.objects
+  }
 
 }
 </script>
@@ -78,8 +57,8 @@ export default {
               <v-card-text>
                 <v-img src="https://raw.githubusercontent.com/Alex-Bailon/Alex-Bailon.github.io/master/assets/images/AlexGCWest.jpg" />
                 <v-timeline dense>
-                  <v-timeline-item v-for="( item, i ) in timelineItems" :key="i" :color="item.color" :icon="item.icon" fill-dot>
-                    <p><strong>{{ item.title }}</strong> <br/> {{ item.text }}</p>
+                  <v-timeline-item v-for="( item, i ) in timelineItems" :key="i" :color="item.metadata.color" :icon="item.metadata.icon" fill-dot>
+                    <p><strong>{{ item.metadata.title }}:</strong> <br/> {{ item.metadata.text }}</p>
                   </v-timeline-item>
                 </v-timeline>
                 <v-btn block depressed outlined href="https://alex-bailon.github.io/assets/images/A_Bailon_Resume.pdf" target="_blank">
